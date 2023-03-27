@@ -1,0 +1,177 @@
+---
+title: "Práctica Tema 6"
+author: "Álvaro Miranda García"
+date: "2023-03-27"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+y_cuentas = c(110,2,6,98,40,94,31,5,8,10)
+x_distancia = c(1.1,100.2,90.3,5.4,57.5,6.6,34.7,65.8,57.9,86.1)
+```
+  
+
+#2
+```{r}
+modelo <- lm(y_cuentas ~ x_distancia)
+anova(modelo)
+```
+
+
+
+#3
+```{r}
+hist(x_distancia)
+shapiro.test(x_distancia)
+```
+
+
+#4
+```{r}
+xy <- y_cuentas * x_distancia
+```
+
+
+#5
+```{r}
+x_cuadrado <- x_distancia^2
+
+```
+
+
+#6
+```{r}
+tabla_datos <- data.frame(y_cuentas, x_distancia, xy, x_cuadrado)
+
+```
+
+#7
+
+```{r}
+library(kableExtra)
+kable(tabla_datos)
+
+```
+
+
+#8
+```{r}
+
+sumatorio <- rowSums(tabla_datos)
+```
+
+
+#9
+
+```{r}
+tabla_datos <- rbind(tabla_datos, sumatorio)
+
+```
+
+
+#10
+```{r}
+modelo <- lm(y_cuentas ~ x_distancia)
+
+```
+
+#11
+
+```{r}
+plot(x_distancia, y_cuentas, main = paste("Y =", round(modelo$coefficients[2],4),"* X + ", round(modelo$coefficients[1],4)), xlab = "Distancia", ylab = "Cuentas")
+abline(modelo)
+```
+
+
+
+#12
+
+```{r}
+residuos <- resid(modelo)
+residuos_estandarizados <- rstandard(modelo)
+residuos_estudentizados <- rstudent(modelo)
+```
+
+
+
+#13
+```{r}
+predict(modelo, newdata = data.frame(x_distancia = 6.6))
+
+```
+
+#14
+```{r}
+set.seed(12345)
+entrenamiento <- sample(1:nrow(tabla_datos), 0.7*nrow(tabla_datos))
+validacion <- setdiff(1:nrow(tabla_datos), entrenamiento)
+
+```
+
+
+#15
+```{r}
+modelo_entrenamiento <- lm(y_cuentas ~ x_distancia, data = tabla_datos, subset = entrenamiento)
+
+```
+
+
+#16
+
+
+```{r}
+summary(modelo_entrenamiento)
+
+```
+
+#17
+
+Los asteriscos significan que el coeficiente de regresión es significativo estadísticamente para un nivel de significación del 5%. 
+
+#18
+
+Los grados de libertad se calculan restando el número de observaciones menos el número de parámetros estimados. En este caso, es 8.
+
+#19
+```{r}
+#Varianza explicada:
+ssr = sum(residuos^2) 
+
+#Varianza no explicada:
+sse = sum((y_cuentas - predict(modelo))^2)
+
+```
+
+
+#20
+```{r}
+library(caret)
+cv <- trainControl(method = "cv", number = 10)
+modelo_cross <- train(y_cuentas ~ x_distancia, data = tabla_datos, method = "lm", trControl = cv)
+```
+
+
+
+#21
+```{r}
+influence.measures(modelo_entrenamiento)
+
+```
+
+
+#22
+```{r}
+plot(modelo_entrenamiento)
+
+```
+
+
+#23
+```{r}
+acf(resid(modelo_entrenamiento))
+```
+
