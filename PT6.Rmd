@@ -9,13 +9,16 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+
+1. Instale y cargue las siguientes librerías: “MASS”, “caret”, “stat”, “olsrr”, “kable”, “kableExtra”, “knitr” y “rmarkdown
 ```{r}
 y_cuentas = c(110,2,6,98,40,94,31,5,8,10)
 x_distancia = c(1.1,100.2,90.3,5.4,57.5,6.6,34.7,65.8,57.9,86.1)
 ```
   
 
-#2
+2. Cree 2 variables almacenadas como vector: “y_cuentas” y “x_distancia” a partir de los siguientes valores numéricos:
 ```{r}
 modelo <- lm(y_cuentas ~ x_distancia)
 anova(modelo)
@@ -23,72 +26,128 @@ anova(modelo)
 
 
 
-#3
+3. Verifique el supuesto de linealidad de la variable explicativa incluyendo un contraste de hipótesis.
 ```{r}
 hist(x_distancia)
-shapiro.test(x_distancia)
+
 ```
 
 
-#4
+4 Verifique el supuesto de normalidad de la variable explicativa mediante su visualización en un histograma y un test de normalidad.
 ```{r}
-xy <- y_cuentas * x_distancia
+shapiro.test(x_distancia)
 ```
 
 
 #5
 ```{r}
-x_cuadrado <- x_distancia^2
+
+xy = y_cuentas * x_distancia
+xy
+
 
 ```
 
 
 #6
 ```{r}
-tabla_datos <- data.frame(y_cuentas, x_distancia, xy, x_cuadrado)
+x_cuadrado <- x_distancia^2
+
+x_cuadrado
 
 ```
 
 #7
 
 ```{r}
+
+tabla_datos <- data.frame(y_cuentas, x_distancia, xy, x_cuadrado)
+
+
+
+```
+
+
+8. Visualice el objeto “tabla_datos” en una tabla en la consola a través de alguna de las funciones ofrecidas por la librería “kableExtra”.
+```{r}
+
 library(kableExtra)
-kable(tabla_datos)
-
+kable(tabla_datos, caption = "Tabla de Datos") %>%
+  kable_styling(full_width = F)
+  
 ```
 
 
-#8
+9. Realice el sumatorio de los valores almacenados en las 4 columnas del data frame “tabla_datos”.
+
 ```{r}
 
-sumatorio <- rowSums(tabla_datos)
+#primer sumatorio
+
+sum1 = sum (tabla_datos$y_cuentas)
+
+#segundo sumatorio
+
+sum2 =  (tabla_datos$x_distancia)
+
+#tercer sumatorio
+
+sum3 = (tabla_datos$xy)
+
+#cuarto sumatorio
+
+sum4 = (tabla_datos$x_cuadrado)
+
+
 ```
 
 
-#9
-
+10 Añada el sumatorio de las 4 columnas como un último registro en el data frame “tabla_datos” de modo que tengamos en un solo objeto los valores junto con el sumatorio
 ```{r}
-tabla_datos <- rbind(tabla_datos, sumatorio)
+
+
+
+sum.y_cuentas <- sum(tabla_datos$y_cuentas)
+sum.x_distancia <- sum(tabla_datos$x_distancia)
+sum.xy <- sum(tabla_datos$xy)
+sum.x_cuadrado <- sum(tabla_datos$x_cuadrado)
+
+row.sums <- c(sum.y_cuentas,sum.x_distancia,sum.xy,sum.x_cuadrado)
+
+tabla_datos_final <- rbind(tabla_datos, row.sums)
+
+tabla_datos_final
+
 
 ```
 
+$$\begin{equation}
+\sigma^2 = \frac{\sum\limits_{i=1}^{n}(y_i – \bar{y})^2} {n – 1}
+\end{equation}$$
 
-#10
+
+
+11 Calcule la recta de regresión por el método de mínimos cuadrados (ordinario) a través de los datos incluidos en el data frame “tabla_datos”.
+
 ```{r}
 modelo <- lm(y_cuentas ~ x_distancia)
 
+
 ```
 
-#11
+
+
+12 Visualice en un gráfico de dispersión la recta de regresión, nube de puntos. Indique en el título la ecuación resultante y edite los nombre de los ejes.
 
 ```{r}
+
 plot(x_distancia, y_cuentas, main = paste("Y =", round(modelo$coefficients[2],4),"* X + ", round(modelo$coefficients[1],4)), xlab = "Distancia", ylab = "Cuentas")
 abline(modelo)
+
 ```
 
 
-
-#12
+13 Calcule los residuos, residuos estandarizados y residuos estudentizados del modelo recién ajustado.
 
 ```{r}
 residuos <- resid(modelo)
@@ -96,15 +155,13 @@ residuos_estandarizados <- rstandard(modelo)
 residuos_estudentizados <- rstudent(modelo)
 ```
 
-
-
-#13
+14 Calcula el pronóstico o estimación del modelo para una observación que registra una distancia de 6.6km con respecto a la mina.
 ```{r}
 predict(modelo, newdata = data.frame(x_distancia = 6.6))
 
 ```
 
-#14
+15 Genera dos conjuntos aleatorios de datos: “entrenamiento” y “validación”
 ```{r}
 set.seed(12345)
 entrenamiento <- sample(1:nrow(tabla_datos), 0.7*nrow(tabla_datos))
@@ -113,30 +170,29 @@ validacion <- setdiff(1:nrow(tabla_datos), entrenamiento)
 ```
 
 
-#15
+16 Ajusta nuevamente el modelo con el conjunto de “entrenamiento”.
 ```{r}
 modelo_entrenamiento <- lm(y_cuentas ~ x_distancia, data = tabla_datos, subset = entrenamiento)
 
 ```
 
 
-#16
-
+17 Interprete el valor asociado a los coeficientes de regresión y a R2. ¿Qué significan los asteriscos inmediatamente a la derecha de los valores arrojados tras ajustar el modelo?
 
 ```{r}
 summary(modelo_entrenamiento)
 
 ```
 
-#17
+18 ¿Cómo se ha realizado el cálculo para los grados de libertad del modelo?
 
 Los asteriscos significan que el coeficiente de regresión es significativo estadísticamente para un nivel de significación del 5%. 
 
-#18
+19 Especifique el total de varianza explicada y no explicada por el modelo
 
 Los grados de libertad se calculan restando el número de observaciones menos el número de parámetros estimados. En este caso, es 8.
 
-#19
+20 Aplique la validación cruzada simple para evaluar la robustez y capacidad predictiva del modelo.
 ```{r}
 #Varianza explicada:
 ssr = sum(residuos^2) 
