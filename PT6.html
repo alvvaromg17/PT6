@@ -859,19 +859,39 @@ abline(modelo)</code></pre>
 <p>13 Calcule los residuos, residuos estandarizados y residuos
 estudentizados del modelo recién ajustado.</p>
 <pre class="r"><code>residuos &lt;- resid(modelo)
-residuos_estandarizados &lt;- rstandard(modelo)
-residuos_estudentizados &lt;- rstudent(modelo)</code></pre>
-<p>#13</p>
+residuos</code></pre>
+<pre><code>##          1          2          3          4          5          6          7 
+##  15.824925  15.570779   8.807066   8.500073   7.145471   5.804766 -26.643686 
+##          8          9         10 
+## -18.830406 -24.419631   8.240642</code></pre>
+<pre class="r"><code>residuos_estandarizados &lt;- rstandard(modelo)
+residuos_estandarizados</code></pre>
+<pre><code>##          1          2          3          4          5          6          7 
+##  1.0784816  1.0622593  0.5721649  0.5661008  0.4307982  0.3843280 -1.6213545 
+##          8          9         10 
+## -1.1448722 -1.4726329  0.5266739</code></pre>
+<pre class="r"><code>residuos_estudentizados &lt;- rstudent(modelo)
+residuos_estudentizados</code></pre>
+<pre><code>##          1          2          3          4          5          6          7 
+##  1.0912716  1.0721374  0.5465101  0.5404749  0.4077319  0.3628715 -1.8509341 
+##          8          9         10 
+## -1.1711614 -1.6134626  0.5014281</code></pre>
+<p>14 Calcula el pronóstico o estimación del modelo para una observación
+que registra una distancia de 6.6km con respecto a la mina.</p>
 <pre class="r"><code>predict(modelo, newdata = data.frame(x_distancia = 6.6))</code></pre>
 <pre><code>##        1 
 ## 88.19523</code></pre>
-<p>#14</p>
+<p>15 Genera dos conjuntos aleatorios de datos: “entrenamiento” y
+“validación”</p>
 <pre class="r"><code>set.seed(12345)
 entrenamiento &lt;- sample(1:nrow(tabla_datos), 0.7*nrow(tabla_datos))
 validacion &lt;- setdiff(1:nrow(tabla_datos), entrenamiento)</code></pre>
-<p>#15</p>
+<p>16 Ajusta nuevamente el modelo con el conjunto de
+“entrenamiento”.</p>
 <pre class="r"><code>modelo_entrenamiento &lt;- lm(y_cuentas ~ x_distancia, data = tabla_datos, subset = entrenamiento)</code></pre>
-<p>#16</p>
+<p>17 Interprete el valor asociado a los coeficientes de regresión y a
+R2. ¿Qué significan los asteriscos inmediatamente a la derecha de los
+valores arrojados tras ajustar el modelo?</p>
 <pre class="r"><code>summary(modelo_entrenamiento)</code></pre>
 <pre><code>## 
 ## Call:
@@ -891,15 +911,18 @@ validacion &lt;- setdiff(1:nrow(tabla_datos), entrenamiento)</code></pre>
 ## Residual standard error: 11.63 on 5 degrees of freedom
 ## Multiple R-squared:  0.4811, Adjusted R-squared:  0.3773 
 ## F-statistic: 4.636 on 1 and 5 DF,  p-value: 0.08392</code></pre>
-<p>#17</p>
+<p>18 ¿Cómo se ha realizado el cálculo para los grados de libertad del
+modelo?</p>
 <p>Los asteriscos significan que el coeficiente de regresión es
 significativo estadísticamente para un nivel de significación del
 5%.</p>
-<p>#18</p>
+<p>19 Especifique el total de varianza explicada y no explicada por el
+modelo</p>
 <p>Los grados de libertad se calculan restando el número de
 observaciones menos el número de parámetros estimados. En este caso, es
 8.</p>
-<p>#19</p>
+<p>20 Aplique la validación cruzada simple para evaluar la robustez y
+capacidad predictiva del modelo.</p>
 <pre class="r"><code>#Varianza explicada:
 ssr = sum(residuos^2) 
 

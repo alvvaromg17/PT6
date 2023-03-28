@@ -2,8 +2,12 @@
 title: "Práctica Tema 6"
 author: "Álvaro Miranda García"
 date: "2023-03-27"
-output: html_document
+output:
+  
+    html_document: default
 ---
+
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -132,7 +136,6 @@ $$\begin{equation}
 ```{r}
 modelo <- lm(y_cuentas ~ x_distancia)
 
-
 ```
 
 
@@ -151,8 +154,13 @@ abline(modelo)
 
 ```{r}
 residuos <- resid(modelo)
+residuos
+
 residuos_estandarizados <- rstandard(modelo)
+residuos_estandarizados
+
 residuos_estudentizados <- rstudent(modelo)
+residuos_estudentizados
 ```
 
 14 Calcula el pronóstico o estimación del modelo para una observación que registra una distancia de 6.6km con respecto a la mina.
@@ -160,6 +168,12 @@ residuos_estudentizados <- rstudent(modelo)
 predict(modelo, newdata = data.frame(x_distancia = 6.6))
 
 ```
+
+
+$$\begin{equation}
+Y_i = \beta_0 + \beta_1 X_i + \epsilon_i
+\end{equation}$$
+
 
 15 Genera dos conjuntos aleatorios de datos: “entrenamiento” y “validación”
 ```{r}
@@ -183,51 +197,52 @@ modelo_entrenamiento <- lm(y_cuentas ~ x_distancia, data = tabla_datos, subset =
 summary(modelo_entrenamiento)
 
 ```
+Los asteriscos significan que el coeficiente de regresión es significativo estadísticamente para un nivel de significación del 5%. 
 
 18 ¿Cómo se ha realizado el cálculo para los grados de libertad del modelo?
+Los grados de libertad se calculan restando el número de observaciones menos el número de parámetros estimados. En este caso, es 8.
 
-Los asteriscos significan que el coeficiente de regresión es significativo estadísticamente para un nivel de significación del 5%. 
 
 19 Especifique el total de varianza explicada y no explicada por el modelo
 
-Los grados de libertad se calculan restando el número de observaciones menos el número de parámetros estimados. En este caso, es 8.
 
-20 Aplique la validación cruzada simple para evaluar la robustez y capacidad predictiva del modelo.
 ```{r}
 #Varianza explicada:
 ssr = sum(residuos^2) 
 
 #Varianza no explicada:
 sse = sum((y_cuentas - predict(modelo))^2)
-
 ```
 
-
-#20
+20 Aplique la validación cruzada simple para evaluar la robustez y capacidad predictiva del modelo.
 ```{r}
 library(caret)
 cv <- trainControl(method = "cv", number = 10)
 modelo_cross <- train(y_cuentas ~ x_distancia, data = tabla_datos, method = "lm", trControl = cv)
+
 ```
 
 
-
-#21
+21. Verifique que no existen observaciones influyentes.
 ```{r}
 influence.measures(modelo_entrenamiento)
 
 ```
 
 
-#22
+
+22. Verifique el supuesto de independencia de los residuos.
 ```{r}
 plot(modelo_entrenamiento)
 
 ```
 
 
-#23
+23. Confirme que los errores del modelo permanecen constantes para todo el rango de estimaciones
 ```{r}
 acf(resid(modelo_entrenamiento))
+
 ```
+
+
 
