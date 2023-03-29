@@ -15,35 +15,33 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 
-1. Instale y cargue las siguientes librerías: “MASS”, “caret”, “stat”, “olsrr”, “kable”, “kableExtra”, “knitr” y “rmarkdown
+__1. Instale y cargue las siguientes librerías: “MASS”, “caret”, “stat”, “olsrr”, “kable”, “kableExtra”, “knitr” y “rmarkdown"__
+  
+Han sido instaladas.
+
+__2. Cree 2 variables almacenadas como vector: “y_cuentas” y “x_distancia” a partir de los siguientes valores numéricos:__
 ```{r}
 y_cuentas = c(110,2,6,98,40,94,31,5,8,10)
 x_distancia = c(1.1,100.2,90.3,5.4,57.5,6.6,34.7,65.8,57.9,86.1)
 ```
-  
 
-2. Cree 2 variables almacenadas como vector: “y_cuentas” y “x_distancia” a partir de los siguientes valores numéricos:
+
+
+__3. Verifique el supuesto de linealidad de la variable explicativa incluyendo un contraste de hipótesis.__
 ```{r}
 modelo <- lm(y_cuentas ~ x_distancia)
 anova(modelo)
 ```
 
 
-
-3. Verifique el supuesto de linealidad de la variable explicativa incluyendo un contraste de hipótesis.
+__4. Verifique el supuesto de normalidad de la variable explicativa mediante su visualización en un histograma y un test de normalidad.__
 ```{r}
 hist(x_distancia)
-
-```
-
-
-4 Verifique el supuesto de normalidad de la variable explicativa mediante su visualización en un histograma y un test de normalidad.
-```{r}
 shapiro.test(x_distancia)
 ```
 
 
-#5
+__5. Multiplique las variable de respuesta por la variable explicativa. Llama al objeto “xy”.__
 ```{r}
 
 xy = y_cuentas * x_distancia
@@ -53,7 +51,7 @@ xy
 ```
 
 
-#6
+__6. Eleve al cuadrado la variable explicativa. Llama al objeto “x_cuadrado".__
 ```{r}
 x_cuadrado <- x_distancia^2
 
@@ -61,7 +59,7 @@ x_cuadrado
 
 ```
 
-#7
+__7. A continuación, almacena las variables: “y_cuentas”, “x_distancia”, “xy” y “x_cuadrado” en un data frame llamado “tabla_datos”__
 
 ```{r}
 
@@ -72,7 +70,7 @@ tabla_datos <- data.frame(y_cuentas, x_distancia, xy, x_cuadrado)
 ```
 
 
-8. Visualice el objeto “tabla_datos” en una tabla en la consola a través de alguna de las funciones ofrecidas por la librería “kableExtra”.
+__8. Visualice el objeto “tabla_datos” en una tabla en la consola a través de alguna de las funciones ofrecidas por la librería “kableExtra”.__
 ```{r}
 
 library(kableExtra)
@@ -82,7 +80,7 @@ kable(tabla_datos, caption = "Tabla de Datos") %>%
 ```
 
 
-9. Realice el sumatorio de los valores almacenados en las 4 columnas del data frame “tabla_datos”.
+__9. Realice el sumatorio de los valores almacenados en las 4 columnas del data frame “tabla_datos”.__
 
 ```{r}
 
@@ -106,7 +104,7 @@ sum4 = (tabla_datos$x_cuadrado)
 ```
 
 
-10 Añada el sumatorio de las 4 columnas como un último registro en el data frame “tabla_datos” de modo que tengamos en un solo objeto los valores junto con el sumatorio
+__10. Añada el sumatorio de las 4 columnas como un último registro en el data frame “tabla_datos” de modo que tengamos en un solo objeto los valores junto con el sumatorio.__
 ```{r}
 
 
@@ -131,7 +129,7 @@ $$\begin{equation}
 
 
 
-11 Calcule la recta de regresión por el método de mínimos cuadrados (ordinario) a través de los datos incluidos en el data frame “tabla_datos”.
+__11. Calcule la recta de regresión por el método de mínimos cuadrados (ordinario) a través de los datos incluidos en el data frame “tabla_datos”.__
 
 ```{r}
 modelo <- lm(y_cuentas ~ x_distancia)
@@ -140,7 +138,7 @@ modelo <- lm(y_cuentas ~ x_distancia)
 
 
 
-12 Visualice en un gráfico de dispersión la recta de regresión, nube de puntos. Indique en el título la ecuación resultante y edite los nombre de los ejes.
+__12. Visualice en un gráfico de dispersión la recta de regresión, nube de puntos. Indique en el título la ecuación resultante y edite los nombre de los ejes.__
 
 ```{r}
 
@@ -150,7 +148,7 @@ abline(modelo)
 ```
 
 
-13 Calcule los residuos, residuos estandarizados y residuos estudentizados del modelo recién ajustado.
+__13. Calcule los residuos, residuos estandarizados y residuos estudentizados del modelo recién ajustado.__
 
 ```{r}
 residuos <- resid(modelo)
@@ -163,7 +161,7 @@ residuos_estudentizados <- rstudent(modelo)
 residuos_estudentizados
 ```
 
-14 Calcula el pronóstico o estimación del modelo para una observación que registra una distancia de 6.6km con respecto a la mina.
+__14. Calcula el pronóstico o estimación del modelo para una observación que registra una distancia de 6.6km con respecto a la mina.__
 ```{r}
 predict(modelo, newdata = data.frame(x_distancia = 6.6))
 
@@ -175,7 +173,7 @@ Y_i = \beta_0 + \beta_1 X_i + \epsilon_i
 \end{equation}$$
 
 
-15 Genera dos conjuntos aleatorios de datos: “entrenamiento” y “validación”
+__15. Genera dos conjuntos aleatorios de datos: “entrenamiento” y “validación”__
 ```{r}
 set.seed(12345)
 entrenamiento <- sample(1:nrow(tabla_datos), 0.7*nrow(tabla_datos))
@@ -184,14 +182,14 @@ validacion <- setdiff(1:nrow(tabla_datos), entrenamiento)
 ```
 
 
-16 Ajusta nuevamente el modelo con el conjunto de “entrenamiento”.
+__16. Ajusta nuevamente el modelo con el conjunto de “entrenamiento”.__
 ```{r}
 modelo_entrenamiento <- lm(y_cuentas ~ x_distancia, data = tabla_datos, subset = entrenamiento)
 
 ```
 
 
-17 Interprete el valor asociado a los coeficientes de regresión y a R2. ¿Qué significan los asteriscos inmediatamente a la derecha de los valores arrojados tras ajustar el modelo?
+__17. Interprete el valor asociado a los coeficientes de regresión y a R2. ¿Qué significan los asteriscos inmediatamente a la derecha de los valores arrojados tras ajustar el modelo?__
 
 ```{r}
 summary(modelo_entrenamiento)
@@ -199,31 +197,36 @@ summary(modelo_entrenamiento)
 ```
 Los asteriscos significan que el coeficiente de regresión es significativo estadísticamente para un nivel de significación del 5%. 
 
-18 ¿Cómo se ha realizado el cálculo para los grados de libertad del modelo?
+__18. ¿Cómo se ha realizado el cálculo para los grados de libertad del modelo?__
+
 Los grados de libertad se calculan restando el número de observaciones menos el número de parámetros estimados. En este caso, es 8.
 
 
-19 Especifique el total de varianza explicada y no explicada por el modelo
+__19. Especifique el total de varianza explicada y no explicada por el modelo.__
 
 
 ```{r}
+
 #Varianza explicada:
 ssr = sum(residuos^2) 
 
 #Varianza no explicada:
 sse = sum((y_cuentas - predict(modelo))^2)
+
 ```
 
-20 Aplique la validación cruzada simple para evaluar la robustez y capacidad predictiva del modelo.
+__20. Aplique la validación cruzada simple para evaluar la robustez y capacidad predictiva del modelo.__
 ```{r}
+
 library(caret)
+
 cv <- trainControl(method = "cv", number = 10)
-modelo_cross <- train(y_cuentas ~ x_distancia, data = tabla_datos, method = "lm", trControl = cv)
+modelo_cruzado <- train(y_cuentas ~ x_distancia, tabla_datos, method = "lm", trControl = cv)
 
 ```
 
 
-21. Verifique que no existen observaciones influyentes.
+__21. Verifique que no existen observaciones influyentes.__
 ```{r}
 influence.measures(modelo_entrenamiento)
 
@@ -231,14 +234,14 @@ influence.measures(modelo_entrenamiento)
 
 
 
-22. Verifique el supuesto de independencia de los residuos.
+__22. Verifique el supuesto de independencia de los residuos.__
 ```{r}
 plot(modelo_entrenamiento)
 
 ```
 
 
-23. Confirme que los errores del modelo permanecen constantes para todo el rango de estimaciones
+__23. Confirme que los errores del modelo permanecen constantes para todo el rango de estimaciones.__
 ```{r}
 acf(resid(modelo_entrenamiento))
 
