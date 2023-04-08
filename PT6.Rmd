@@ -3,8 +3,7 @@ title: "Práctica Tema 6"
 author: "Álvaro Miranda García"
 date: "2023-03-27"
 output:
-  
-    html_document: default
+  html_document: default
 ---
 
 
@@ -28,13 +27,28 @@ x_distancia = c(1.1,100.2,90.3,5.4,57.5,6.6,34.7,65.8,57.9,86.1)
 
 
 __3. Verifique el supuesto de linealidad de la variable explicativa incluyendo un contraste de hipótesis.__
+
+Verificar el supuesto de linealidad de la variable explicativa incluyendo un contraste de hipótesis implica comprobar si existe una relación lineal significativa entre la variable independiente (explicativa) y la variable dependiente. Esto se puede hacer visualizando la relación entre las dos variables mediante un gráfico de dispersión y verificando si parece que existe una tendencia lineal.
+
+Además, también se puede realizar un análisis estadístico formal para determinar si hay una relación lineal significativa entre las dos variables. Esto se puede hacer mediante un contraste de hipótesis en el que la hipótesis nula es que no hay relación lineal significativa entre las dos variables, mientras que la hipótesis alternativa es que hay una relación lineal significativa.
+
+En el análisis estadístico, se utiliza el coeficiente de correlación para medir la fuerza y la dirección de la relación entre las dos variables. Si el coeficiente de correlación es cercano a 1, entonces hay una relación lineal positiva fuerte entre las dos variables, mientras que si es cercano a -1, hay una relación lineal negativa fuerte. Si el coeficiente de correlación es cercano a 0, entonces no hay una relación lineal significativa entre las dos variables.
+
 ```{r}
-modelo <- lm(y_cuentas ~ x_distancia)
-anova(modelo)
+plot(x_distancia, y_cuentas, xlab = "Distancia", ylab = "Cuentas")
+
+cor(x_distancia, y_cuentas)
 ```
 
 
 __4. Verifique el supuesto de normalidad de la variable explicativa mediante su visualización en un histograma y un test de normalidad.__
+
+El supuesto de normalidad es un supuesto básico en muchos modelos estadísticos que implica que los errores o residuos de un modelo siguen una distribución normal (también conocida como distribución gaussiana).
+
+En otras palabras, este supuesto establece que las observaciones en una muestra aleatoria se distribuyen normalmente alrededor de la media poblacional. Si los datos no se ajustan a una distribución normal, los resultados de un modelo pueden ser inexactos o incorrectos.
+
+La normalidad se puede verificar visualmente mediante un histograma o un gráfico Q-Q (cuantil-cuantil), donde se compara la distribución de los datos con una distribución normal teórica. Además, se puede utilizar un test de normalidad, como el test de Shapiro-Wilk, que aplicamos a continuación, o el test de Kolmogorov-Smirnov; para cuantificar y determinar si una muestra de datos se ajusta a una distribución normal.
+
 ```{r}
 hist(x_distancia)
 shapiro.test(x_distancia)
@@ -77,6 +91,13 @@ library(kableExtra)
 kable(tabla_datos, caption = "Tabla de Datos") %>%
   kable_styling(full_width = F)
   
+```
+
+Añado, además, otra forma de hacer una tabla interesante e interactiva (aunque no en pdf), utilizando la librería DT y la función datatable (df).
+
+```{r}
+library (DT)
+datatable (tabla_datos)
 ```
 
 
@@ -129,7 +150,14 @@ $$\begin{equation}
 
 
 
-__11. Calcule la recta de regresión por el método de mínimos cuadrados (ordinario) a través de los datos incluidos en el data frame “tabla_datos”.__
+__11. Calcule la recta de regresión por el método de mínimos cuadrados (ordinario) a través de los datos incluidos en el data frame “tabla_datos”__
+
+La recta de regresión mediante el método de mínimos cuadrados (ordinario) es una línea recta que se ajusta a un conjunto de datos para predecir o modelar la relación entre una variable independiente (explicativa) y una variable dependiente.
+
+El método de mínimos cuadrados ordinarios (MCO) busca la recta que minimiza la suma de los cuadrados de las diferencias entre los valores observados y los valores predichos por la recta. La recta de regresión obtenida por este método se puede utilizar para hacer predicciones de valores de la variable dependiente para valores específicos de la variable independiente.
+
+La recta de regresión se puede expresar en forma de ecuación: Y = a + bX, donde Y es la variable dependiente, X es la variable independiente, a es la intersección en el eje Y (valor de Y cuando X es 0) y b es la pendiente de la recta (cambio en Y dividido por el cambio en X). La pendiente de la recta indica el cambio en la variable dependiente por cada unidad de cambio en la variable independiente.
+
 
 ```{r}
 modelo <- lm(y_cuentas ~ x_distancia)
@@ -149,6 +177,12 @@ abline(modelo)
 
 
 __13. Calcule los residuos, residuos estandarizados y residuos estudentizados del modelo recién ajustado.__
+
+Los residuos son la diferencia entre los valores observados de la variable dependiente y los valores estimados por el modelo de regresión. Es decir, los residuos son las diferencias entre los valores reales y los valores que el modelo de regresión predice para cada observación.
+
+Los residuos estandarizados son los residuos divididos por la desviación estándar de los residuos. Esto se utiliza para comparar la magnitud de los residuos en diferentes modelos de regresión. 
+
+Los residuos estudentizados, por otro lado, son una medida de los residuos que tienen en cuenta la varianza de los errores. Los residuos estudentizados se calculan dividiendo el residuo por la desviación estándar estimada de los errores. Los residuos estudentizados se utilizan para detectar valores atípicos o puntos influyentes en un modelo de regresión.
 
 ```{r}
 residuos <- resid(modelo)
